@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet"
+          href="{% static "calc/bootstrap/css/bootstrap.min.css" %}">
+
+    <style>
+
+        body {
+        {#            background: url({% static 'calc/logo.jpg' %}) no-repeat center;#}
+        }
+
+        {#        input {#}
+        {#            opacity: 0.5;#}
+        {#            border-color: #000000;#}
+        {#            box-shadow: none;#}
+        {#        }#}
+        {##}
+        {#        .bg {#}
+        {#            background: url({% static 'calc/logo.jpg' %}) no-repeat center;#}
+        {#            opacity: 0.05;#}
+        {#            position: absolute;#}
+        {#            width: 100%;#}
+        {#            height: 100%;#}
+        {#            z-index: -1;#}
+        {#        }#}
+
+    </style>
+
+    <script>
+
+        function AddRow() {
+
+            var tableObj = $("#measurements");
+            var rowObj = tableObj.find("tr:last")
+
+            var btnObj = $(rowObj).find("#actBtn");
+            rowObj = rowObj.clone();
+            btnObj.attr("onClick", "RemoveRow(this);");
+            btnObj.html("Удалить строку");
+
+            var cellObj = $(rowObj).find('th');
+            cellObj.html(parseInt(cellObj.text()) + 1);
+
+            tableObj.append(rowObj);
+        }
+
+
+        function RemoveRow(btn) {
+            $(btn).closest("tr").remove();
+            updateIds();
+        }
+        
+        function updateIds() {
+            var i = 0;
+            $('#measurements').find('> tbody  > tr').each(function() {
+                $(this).find('th').html(++i)
+            });
+        }
+        
+    </script>
+
+</head>
+<body>
+
+<div class="bg">
+    {#    <img src="{% static 'calc/logo.jpg' %}">#}
+</div>
+
+<div class="container" style="margin-top: 1%;">
+    {% if success %}
+        <div class="alert alert-success" role="alert">
+            Settings saved.
+        </div>
+    {% elif success == False %}
+        <div class="alert alert-danger" role="alert">
+            Something gone wrong...
+        </div>
+    {% endif %}
+
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2>Внедрение
+                методики по ГОСТ
+                50.2.060-2008</h2>
+        </div>
+        <div class="col-md-4">
+            <img src="{% static 'calc/logo.jpg' %}" style="width: 100%;">
+        </div>
+
+    </div>
+
+    <form class="form-horizontal">
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label"
+                       for="r">Повторяемость</label>
+                <div class="col-sm-8">
+                    <input id="r" name="r" placeholder=""
+                           class="form-control" required=""
+                           type="text">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label"
+                       for="R">Воспроизводимость</label>
+                <div class="col-sm-8">
+                    <input id="R" name="R" placeholder=""
+                           class="form-control" required=""
+                           type="text">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label" for="n">Число
+                    параллельных измерений</label>
+                <div class="col-sm-8">
+                    <input id="n" name="n" placeholder=""
+                           class="form-control" required=""
+                           type="text">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label" for="n">
+                    Aттестованное значение</label>
+                <div class="col-sm-8">
+                    <input id="n" name="n" placeholder=""
+                           class="form-control" required=""
+                           type="text">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label" for="n">
+                    Погрешность образца контроля</label>
+                <div class="col-sm-8">
+                    <input id="n" name="n" placeholder=""
+                           class="form-control" required=""
+                           type="text">
+
+                </div>
+            </div>
+        </div>
+
+        <table id="measurements" class="table table-sm">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>x<sub>1</sub></th>
+                <th>x<sub>2</sub></th>
+                <th style="white-space: nowrap; width: 1%;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th style="vertical-align: middle;" scope="row">1</th>
+                <td><input class="form-control" type="text"></td>
+                <td><input class="form-control" type="text"></td>
+                <td style="vertical-align: middle;">
+                    <button id="actBtn" type="button" class="btn btn-secondary btn-sm"
+                            onclick="AddRow();">
+                        Добавить строку
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <button id="send" name="send" class="btn btn-primary">
+                Рассчитать
+            </button>
+        </div>
+    </form>
+
+
+</div>
+
+
+<script src="{% static "calc/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+<script src="{% static "calc/jquery-3.2.1.min.js" %}"></script>
+</body>
+</html>
