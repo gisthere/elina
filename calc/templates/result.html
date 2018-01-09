@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet"
+          href="{% static "calc/bootstrap/css/bootstrap.min.css" %}">
+
+<body>
+<p align="left">Утверждаю:</p>
+<p align="left">Начальник _________________</p>
+<p align="left">___________________________</p>
+<p align="left">___________________________</p>
+<p align="left">"_____"_____________ ______</p>
+<h1 align="center"><span>Акт</span></h1>
+<p align="center">
+    <small>установленных показателей качества результатов анализа при
+        реализации методики
+    </small>
+</p>
+<p align="center">
+    <small>анализа в лаборатории</small>
+</p>
+<p align="left">Наименование лаборатории, применяющей данную
+    методику:___________________________________________________</p>
+<p align="left">Наименование методики
+    анализа:___________________________________________________________________________</p>
+<p align="left">Обозначение НД на методику
+    анализа:______________________________________________________________________</p>
+<p align="left">Показатели качества результатов анализа были оценены на
+    основе<sub align="left">
+        <small>нужное подчеркнуть</small>
+    </sub>: данных специального эксперимента / контрольных измерений
+</p>
+<p align="left">Полученных в период с _____________________ по
+    _____________________</p>
+<p align="center"><strong>Диапазон измерений и значения показателей
+    точности, правильности и внутрилабораторной прецизионности результатов
+    анализа</strong></p>
+<table align="center" border="3">
+    <tr>
+        <td align="center">Диапазон измерений</td>
+        <td align="center">Показатель<br> внутрилабораторной<br>
+            прецизионности<br> результатов анализа<br> в виде среднего<br>
+            квадратического<br>
+            отклонения,<br> &sigma;<sub>R<sub>л</sub></sub></td>
+        <td align="center">Показатель<br> правильности<br> результатов
+            анализа<br>
+            <small>(границы, в которых<br> систематическая погрешность<br>
+                лаборатории находится с<br> принятой вероятностью Р),<br> (&Delta;<sub>c<sub>л</sub>,н</sub>, &Delta;<sub>c<sub>л</sub>,в</sub>)
+                или &plusmn; &Delta;<sub>c<sub>л</sub></sub> при<br>
+                |&Delta;<sub>c<sub>л</sub>,н</sub>|
+                = &Delta;<sub>c<sub>л</sub>,в</sub></small>
+        </td>
+        <td align="center">Показатель точности<br> результатов анализа<br>
+            <small>(границы, в которых <br> погрешность любого из<br>
+                совокупности результатов<br> анализа, полученных в<br>
+                лаборатории при реализации<br> методики находится с<br>
+                принятой вероятностью Р),<br>
+                (&Delta;<sub>л,н</sub>, &Delta;<sub>л,в</sub>)<br>
+                или &plusmn; &Delta;<sub>л</sub> при<br>
+                |&Delta;<sub>л,н</sub>|=&Delta;<sub>л,в</sub></small>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">{{ mr }}</td>
+        <td align="center">{{ s }}</td>
+        <td align="center">{{ delta_s_l_v }}</td>
+        <td align="center">{{ delta_l_v }}</td>
+    </tr>
+</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p align="left">Инженер по качеству _______________<sub>подпись</sub>/______________________________/
+</p>
+
+
+<script src="{% static "calc/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+<script src="{% static "calc/jquery-3.2.1.min.js" %}"></script>
+</body>
+</html>
