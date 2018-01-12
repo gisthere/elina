@@ -1,0 +1,324 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet"
+          href="{% static "calc/bootstrap/css/bootstrap.min.css" %}">
+
+    <style></style>
+
+</head>
+<body>
+
+<div class="bg">
+    {#    <img src="{% static 'calc/logo.jpg' %}">#}
+</div>
+
+<div class="container" style="margin-top: 1%;">
+    {% if success %}
+        <div class="alert alert-success" role="alert">
+            Settings saved.
+        </div>
+    {% elif success == False %}
+        <div class="alert alert-danger" role="alert">
+            Something gone wrong...
+        </div>
+    {% endif %}
+
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2>Построение карт Шухарта</h2>
+        </div>
+        <div class="col-md-4">
+            <img src="{% static 'calc/logo.jpg' %}" style="width: 100%;">
+        </div>
+
+    </div>
+
+    <form class="form-horizontal" action="/" method="post">{% csrf_token %}
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label" for="n">Число
+                    параллельных измерений</label>
+                <div class="col-sm-8">
+                    <input id="n" name="n" placeholder=""
+                           class="form-control" required=""
+                           type="text">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label" for="k">
+                    Aттестованное значение</label>
+                <div class="col-sm-8">
+                    <input id="k" name="k" placeholder=""
+                           class="form-control" required=""
+                           type="text">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label" for="k">
+                    Показатели точности</label>
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label
+                                    class="custom-control custom-radio">
+                                <input id="radio1" name="rb1" type="radio"
+                                       class="custom-control-input" checked>
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Методика</span>
+                            </label>
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="k">
+                                                Внутрилабораторная
+                                                прецизионность
+                                            </label>
+                                            <input id="k" name="k"
+                                                   placeholder=""
+                                                   class="form-control"
+                                                   required=""
+                                                   type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="k">
+                                                Повторяемость
+                                            </label>
+                                            <input id="k" name="k"
+                                                   placeholder=""
+                                                   class="form-control"
+                                                   required=""
+                                                   type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="custom-control custom-radio">
+                                <input id="radio2" name="rb1" type="radio"
+                                       class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Акт</span>
+                            </label>
+                            <fieldset disabled>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="k">
+                                                Предел воспроизводимости
+                                            </label>
+                                            <input id="k" name="k"
+                                                   placeholder=""
+                                                   class="form-control"
+                                                   required=""
+                                                   type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="k">
+                                                Предел повторяемости
+                                            </label>
+                                            <input id="k" name="k"
+                                                   placeholder=""
+                                                   class="form-control"
+                                                   required=""
+                                                   type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <div class="row">
+                <label class="col-sm-4 col-form-label" for="k">
+                    Характеристика относительной погрешности</label>
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label
+                                    class="custom-control custom-radio">
+                                <input id="radio3" name="rb2" type="radio"
+                                       class="custom-control-input" checked>
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Расчёт</span>
+                            </label>
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="k">
+                                                Характеристика относительной
+                                                погрешности
+                                            </label>
+                                            <input id="k" name="k"
+                                                   placeholder=""
+                                                   class="form-control"
+                                                   required=""
+                                                   type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="custom-control custom-radio">
+                                <input id="radio4" name="rb2" type="radio"
+                                       class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Акт</span>
+                            </label>
+                            <fieldset disabled>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label for="k">
+                                                Предел воспроизводимости
+                                            </label>
+                                            <input id="k" name="k"
+                                                   placeholder=""
+                                                   class="form-control"
+                                                   required=""
+                                                   type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <table id="measurements" class="table table-sm">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>x<sub>1</sub></th>
+                <th>x<sub>2</sub></th>
+                <th style="white-space: nowrap; width: 1%;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="1">
+                <th style="vertical-align: middle;" scope="row">1</th>
+                <td><input name="x1_1" class="form-control" type="text"
+                           title=""></td>
+                <td><input name="x2_1" class="form-control" type="text"
+                           title=""></td>
+                <td style="vertical-align: middle;">
+                    <button id="actBtn" type="button"
+                            class="btn btn-secondary btn-sm"
+                            onclick="AddRow();">
+                        Добавить строку
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <button class="btn btn-primary">
+                Построить
+            </button>
+        </div>
+    </form>
+
+
+</div>
+
+
+<script src="{% static "calc/jquery-3.2.1.min.js" %}"></script>
+<script src="{% static "calc/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+<script>
+
+    $(document).ready(function () {
+        $('input[type=radio][name=rb1],[name=rb2]').change(function () {
+            console.log(this.id);
+            $(this).closest('.row').find('fieldset').prop('disabled', function (_, val) { return ! val; });
+        });
+    });
+
+    function AddRow() {
+
+        var tableObj = $("#measurements");
+        var rowObj = tableObj.find("tr:last")
+
+        var btnObj = $(rowObj).find("#actBtn");
+        rowObj = rowObj.clone();
+        btnObj.attr("onClick", "RemoveRow(this);");
+        btnObj.html("Удалить строку");
+
+        var newId = parseInt($(rowObj).attr('id')) + 1;
+        console.log(newId);
+        UpdateRowInternals(rowObj, newId);
+
+        tableObj.append(rowObj);
+    }
+
+
+    function RemoveRow(btn) {
+        $(btn).closest("tr").remove();
+        updateIds();
+    }
+
+    function updateIds() {
+        var i = 1;
+        $('#measurements').find('> tbody  > tr').each(function () {
+            UpdateRowInternals($(this), i++);
+        });
+    }
+
+    function UpdateRowInternals(rowObj, id) {
+        rowObj.attr('id', id);
+        var cellObj = $(rowObj).find('th');
+        cellObj.html(id);
+        $(rowObj).find('input').each(function (index, elem) {
+            $(elem).attr("name", function (i, val) {
+                return val.replace(/(\d+)$/, id);
+            });
+        });
+    }
+
+</script>
+</body>
+</html>
