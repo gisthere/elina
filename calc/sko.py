@@ -1,12 +1,12 @@
 import math
 import os
 import matplotlib
-import mpld3
 import pandas as pd
 import numpy as np
 
 matplotlib.use('Agg')
 
+import mpld3
 import matplotlib.pyplot as plt
 
 
