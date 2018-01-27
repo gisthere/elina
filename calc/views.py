@@ -81,7 +81,7 @@ class ShewhartView(TemplateView):
         else:
             m1 = 2
 
-        if request.POST.get('rb2', None) == 'radio1':
+        if request.POST.get('rb2', None) == 'radio3':
             m2 = 1
         else:
             m2 = 2
