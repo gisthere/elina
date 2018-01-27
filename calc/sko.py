@@ -1,12 +1,13 @@
 import math
 import os
 import matplotlib
-import matplotlib.pyplot as plt
 import mpld3
 import pandas as pd
 import numpy as np
 
 matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
 
 
 def round_up(x, a):
@@ -159,10 +160,7 @@ class ShewhartMap:
 
         K_k_l = (self.data.mean(axis=1) - self.k)
         r_k_l = (self.data['x1'] - self.data['x2']).abs()
-        R_k_l = (
-            self.data.mean(axis=1)[1:].reset_index()[0] - self.data.mean(
-                axis=1)[
-                                                          :-1]).abs()
+        R_k_l = (self.data.mean(axis=1)[1:].reset_index()[0] - self.data.mean(axis=1)[:-1]).abs()
 
         fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=False, sharey=False)
         fig.set_size_inches(18.5, 10.5)
