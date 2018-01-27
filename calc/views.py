@@ -47,13 +47,25 @@ class ShewhartView(TemplateView):
         return response
 
     def post(self, request, *args, **kwargs):
-        x1 = [value for key, value in sorted(request.POST.items()) if
+        # filter
+        x1 = [(key, value) for key, value in request.POST.items() if
               key.startswith("x1_")]
+        # sort
+        x1 = sorted(x1, key=lambda x: int(x[0][3:]))
+        # get only values
+        x1 = map(lambda x: x[1], x1)
+
         x1 = pd.Series(x1, name='x1', dtype='float32')
-        x2 = [value for key, value in sorted(request.POST.items()) if
+
+        x2 = [(key, value) for key, value in request.POST.items() if
               key.startswith("x2_")]
+
+        x2 = sorted(x2, key=lambda x: int(x[0][3:]))
+        x2 = map(lambda x: x[1], x2)
         x2 = pd.Series(x2, name='x2', dtype='float32')
         data = pd.concat([x1, x2], axis=1)
+
+        # print(sorted(request.POST.items()))
 
         n = int(request.POST['n'])
         k = float(request.POST['k'])

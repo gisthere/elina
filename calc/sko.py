@@ -4,7 +4,7 @@ import matplotlib
 import pandas as pd
 import numpy as np
 
-matplotlib.use('Agg')
+matplotlib.use('SVG')
 
 import mpld3
 import matplotlib.pyplot as plt
@@ -121,7 +121,6 @@ class ShewhartMap:
 
             gamma1 = self.sigma_R_l / self.sigma_r_l
             gamma = math.sqrt(gamma1 ** 2 + ((self.n - 1) / self.n))
-            print("Гамма =", gamma, sep=" ")
             # print("Контроль повторяемости")
             r_sr = 1.128 * 0.01 * self.sigma_r_l
             r_pr = 2.834 * 0.01 * self.sigma_r_l
@@ -141,38 +140,51 @@ class ShewhartMap:
             gamma = math.sqrt(gamma1 ** 2 + ((self.n - 1) / self.n))
 
             # print("Контроль повторяемости")
-            r_sr = 1.128 * 0.01 * self.sigma_r_l
-            r_pr = 2.834 * 0.01 * self.sigma_r_l
-            r_d = 3.686 * 0.01 * self.sigma_r_l
+            r_sr = 1.128 * self.sigma_r_l
+            r_pr = 2.834 * self.sigma_r_l
+            r_d = 3.686 * self.sigma_r_l
 
             # print("Контроль внутрилаб.прецизионности")
-            R_sr = 1.128 * 0.01 * self.sigma_R_l
-            R_pr = 2.834 * 0.01 * self.sigma_R_l
-            R_d = 3.686 * 0.01 * self.sigma_R_l
+            R_sr = 1.128 * self.sigma_R_l
+            R_pr = 2.834 * self.sigma_R_l
+            R_d = 3.686 * self.sigma_R_l
 
         if m2 == 1:  # Акт
-            k = 0.01 * self.delta
+            k = self.delta
         else:  # Расчёт
-            delta = 1.96 * self.R2 * 2.77
-            k = 0.01 * 0.84 * delta
+            delta = 1.96 * self.R2 / 2.77
+            k = 0.84 * delta
 
         k_d = 1.5 * k
 
         K_k_l = (self.data.mean(axis=1) - self.k)
         r_k_l = (self.data['x1'] - self.data['x2']).abs()
-        R_k_l = (self.data.mean(axis=1)[1:].reset_index()[0] - self.data.mean(axis=1)[:-1]).abs()
+        R_k_l = (
+        self.data.mean(axis=1)[1:].reset_index()[0] - self.data.mean(axis=1)[
+                                                      :-1]).abs()
 
-        fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=False, sharey=False)
+        fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=False)
         fig.set_size_inches(18.5, 10.5)
         x = range(1, K_k_l.shape[0] + 1)
+        min_x = min(x)
+        max_x = max(x)
 
         ax1.set_title("Контроль повторяемости")
         ax1.grid()
         ax1.plot(x, r_k_l, 'ro')
         ax1.plot(x, r_k_l, color='red')
-        ax1.axhline(r_sr, color='green', label="Средняя линия")
-        ax1.axhline(r_pr, color='blue', label="Предел предупреждения")
-        ax1.axhline(r_d, color='black', label="Предел действия")
+        # ax1.axhline(r_sr, color='green', label="Средняя линия")
+        ax1.plot((min_x, max_x), (r_sr, r_sr), color='green',
+                 label="Средняя линия")
+
+        # ax1.axhline(r_pr, color='blue', label="Предел предупреждения")
+        ax1.plot((min_x, max_x), (r_pr, r_pr), color='blue',
+                 label="Предел предупреждения")
+
+        # ax1.axhline(r_d, color='black', label="Предел действия")
+        ax1.plot((min_x, max_x), (r_d, r_d), color='black',
+                 label="Предел действия")
+
 
         start, end = ax1.get_ylim()
         step = 0.02
@@ -185,9 +197,15 @@ class ShewhartMap:
         ax2.grid()
         ax2.plot(x[:-1], R_k_l, 'ro')
         ax2.plot(x[:-1], R_k_l, color='red')
-        ax2.axhline(R_sr, color='green', label="Средняя линия")
-        ax2.axhline(R_pr, color='blue', label="Предел предупреждения")
-        ax2.axhline(R_d, color='black', label="Предел действия")
+        # ax2.axhline(R_sr, color='green', label="Средняя линия")
+        ax2.plot((min_x, max_x), (R_sr, R_sr), color='green',
+                 label="Средняя линия")
+        # ax2.axhline(R_pr, color='blue', label="Предел предупреждения")
+        ax2.plot((min_x, max_x), (R_pr, R_pr), color='blue',
+                 label="Предел предупреждения")
+        # ax2.axhline(R_d, color='black', label="Предел действия")
+        ax2.plot((min_x, max_x), (R_d, R_d), color='black',
+                 label="Предел действия")
 
         ax2.set_xticks(x)
         start, end = ax2.get_ylim()
@@ -201,11 +219,21 @@ class ShewhartMap:
         ax3.grid()
         ax3.plot(x, K_k_l, 'ro')
         ax3.plot(x, K_k_l, color='red')
-        ax3.axhline(0, color='green', label="Средняя линия")
-        ax3.axhline(k, color='blue', label="Предел предупреждения")
-        ax3.axhline(k_d, color='black', label="Предел действия")
-        ax3.axhline(-k, color='blue', label="Предел предупреждения")
-        ax3.axhline(-k_d, color='black', label="Предел действия")
+        # ax3.axhline(0, color='green', label="Средняя линия")
+        ax3.plot((min_x, max_x), (0, 0), color='green',
+                 label="Средняя линия")
+        # ax3.axhline(k, color='blue', label="Предел предупреждения")
+        ax3.plot((min_x, max_x), (k, k), color='blue',
+                 label="Предел предупреждения")
+        # ax3.axhline(k_d, color='black', label="Предел действия")
+        ax3.plot((min_x, max_x), (k_d, k_d), color='black',
+                 label="Предел действия")
+        # ax3.axhline(-k, color='blue', label="Предел предупреждения")
+        ax3.plot((min_x, max_x), (-k, -k), color='blue',
+                 label="Предел предупреждения")
+        # ax3.axhline(-k_d, color='black', label="Предел действия")
+        ax3.plot((min_x, max_x), (-k_d, -k_d), color='black',
+                 label="Предел действия")
 
         ax3.set_xticks(x)
         start, end = ax3.get_ylim()
@@ -214,5 +242,7 @@ class ShewhartMap:
         end = round_up(end, step)
         ax3.set_yticks(np.arange(start, end, step))
         ax3.legend()
+
+        plt.show()
 
         return mpld3.fig_to_html(fig)
