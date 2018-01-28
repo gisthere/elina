@@ -2,11 +2,13 @@ import math
 import os
 import matplotlib
 import pandas as pd
-import numpy as np
 
 matplotlib.use('SVG')
 
 import mpld3
+from mpld3 import plugins
+from mpld3.plugins import PointHTMLTooltip
+
 import matplotlib.pyplot as plt
 
 
@@ -122,14 +124,14 @@ class ShewhartMap:
             gamma1 = self.sigma_R_l / self.sigma_r_l
             gamma = math.sqrt(gamma1 ** 2 + ((self.n - 1) / self.n))
             # print("Контроль повторяемости")
-            r_sr = 1.128 * 0.01 * self.sigma_r_l
-            r_pr = 2.834 * 0.01 * self.sigma_r_l
-            r_d = 3.686 * 0.01 * self.sigma_r_l
+            r_sr = 1.128 * self.sigma_r_l
+            r_pr = 2.834 * self.sigma_r_l
+            r_d = 3.686 * self.sigma_r_l
 
             # print("Контроль внутрилаб.прецизионности")
-            R_sr = 1.128 * 0.01 * self.sigma_R_l
-            R_pr = 2.834 * 0.01 * self.sigma_R_l
-            R_d = 3.686 * 0.01 * self.sigma_R_l
+            R_sr = 1.128 * self.sigma_R_l
+            R_pr = 2.834 * self.sigma_R_l
+            R_d = 3.686 * self.sigma_R_l
 
         else:  # Методика
 
@@ -160,8 +162,9 @@ class ShewhartMap:
         K_k_l = (self.data.mean(axis=1) - self.k)
         r_k_l = (self.data['x1'] - self.data['x2']).abs()
         R_k_l = (
-        self.data.mean(axis=1)[1:].reset_index()[0] - self.data.mean(axis=1)[
-                                                      :-1]).abs()
+            self.data.mean(axis=1)[1:].reset_index()[0] - self.data.mean(
+                axis=1)[
+                                                          :-1]).abs()
 
         fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=False)
         fig.set_size_inches(18.5, 10.5)
@@ -171,7 +174,7 @@ class ShewhartMap:
 
         ax1.set_title("Контроль повторяемости")
         ax1.grid()
-        ax1.plot(x, r_k_l, 'ro')
+        points = ax1.plot(x, r_k_l, 'ro')
         ax1.plot(x, r_k_l, color='red')
         # ax1.axhline(r_sr, color='green', label="Средняя линия")
         ax1.plot((min_x, max_x), (r_sr, r_sr), color='green',
@@ -185,17 +188,26 @@ class ShewhartMap:
         ax1.plot((min_x, max_x), (r_d, r_d), color='black',
                  label="Предел действия")
 
+        print(r_k_l.tolist() + [r_sr, r_pr, r_d])
+        # r_sr, r_pr, r_d
 
-        start, end = ax1.get_ylim()
-        step = 0.02
-        start = round_down(start, step)
-        end = round_up(end, step)
-        ax1.set_yticks(np.arange(start, end, step))
+        # start, end = ax1.get_ylim()
+        # step_count = 10.0
+        # step = (end - start) / step_count
+        # start = round_down(start, step)
+        # end = round_up(end, step)
+        ticks = sorted(r_k_l.unique().tolist() + [r_sr, r_pr, r_d])
+        ax1.set_yticks(ticks)
+        ax1.set_yticklabels(ticks, minor=False)
         ax1.legend()
+        #
+        # for p in zip(points[0].get_xdata(orig=True),
+        #              points[0].get_ydata(orig=True)):
+        #     ax1.annotate(p[1], (p[0], p[1]), size=15)
 
         ax2.set_title("Контроль внутрилабораторной прецизионности")
         ax2.grid()
-        ax2.plot(x[:-1], R_k_l, 'ro')
+        points = ax2.plot(x[:-1], R_k_l, 'ro')
         ax2.plot(x[:-1], R_k_l, color='red')
         # ax2.axhline(R_sr, color='green', label="Средняя линия")
         ax2.plot((min_x, max_x), (R_sr, R_sr), color='green',
@@ -208,16 +220,24 @@ class ShewhartMap:
                  label="Предел действия")
 
         ax2.set_xticks(x)
-        start, end = ax2.get_ylim()
-        step = 0.02
-        start = round_down(start, step)
-        end = round_up(end, step)
-        ax2.set_yticks(np.arange(start, end, step))
+        # start, end = ax2.get_ylim()
+        # step_count = 10.0
+        # step = (end - start) / step_count
+        # start = round_down(start, step)
+        # end = round_up(end, step)
+        # ax2.set_yticks(np.arange(start, end, step))  # (end - start) / step
+        ticks = sorted(R_k_l.unique().tolist() + [R_sr, R_pr, R_d])
+        ax2.set_yticks(ticks)
+        ax2.set_yticklabels(ticks, minor=False)
         ax2.legend()
+
+        # for p in zip(points[0].get_xdata(orig=True),
+        #              points[0].get_ydata(orig=True)):
+        #     ax2.annotate(p[1], (p[0], p[1]), size=15)
 
         ax3.set_title("Контроль точности")
         ax3.grid()
-        ax3.plot(x, K_k_l, 'ro')
+        points = ax3.plot(x, K_k_l, 'ro')
         ax3.plot(x, K_k_l, color='red')
         # ax3.axhline(0, color='green', label="Средняя линия")
         ax3.plot((min_x, max_x), (0, 0), color='green',
@@ -236,13 +256,42 @@ class ShewhartMap:
                  label="Предел действия")
 
         ax3.set_xticks(x)
-        start, end = ax3.get_ylim()
-        step = 0.02
-        start = round_down(start, step)
-        end = round_up(end, step)
-        ax3.set_yticks(np.arange(start, end, step))
+        # start, end = ax3.get_ylim()
+        # step_count = 10.0
+        # step = (end - start) / step_count
+        # start = round_down(start, step)
+        # end = round_up(end, step)
+        # ax3.set_yticks(pd.np.arange(start, end, step))
+        ticks = sorted(K_k_l.unique().tolist() + [k, -k, k_d, -k_d])
+        ax3.set_yticks(ticks)
+        ax3.set_yticklabels(ticks, minor=False)
+        # ax3.set_yticks([])
+        # ax3.tick_params(
+        #     axis='y',  # changes apply to the x-axis
+        #     which='both',  # both major and minor ticks are affected
+        #     left='off',  # ticks along the bottom edge are off
+        #     right='off',  # ticks along the bottom edge are off
+        #     labelleft='off',  # labels along the bottom edge are off)
+        #     labelright='off',  # labels along the bottom edge are off)
+        #     gridOn=False,
+        #     color='r',
+        #     width=0,
+        #     tick1On=False,
+        #     tick2On=False,
+        #     label1On=False,
+        #     label2On=False)
         ax3.legend()
 
-        plt.show()
+        # print(sorted(K_k_l.unique().tolist() + [k, -k, k_d, -k_d]))
+
+        # for p in zip(points[0].get_xdata(orig=True),
+        #              points[0].get_ydata(orig=True)):
+        #     ax3.annotate(p[1], (p[0], p[1]), size=15)
+
+        # labels = ['<h1>{title}</h1>'.format(title=val) for val in K_k_l.tolist()]
+        # # for i in range(10):
+        # plugins.connect(fig, PointHTMLTooltip(points[0], labels))
+        # print(points[0])
+        # plt.show()
 
         return mpld3.fig_to_html(fig)
