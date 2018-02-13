@@ -12,6 +12,7 @@ class IndexView(TemplateView):
         return response
 
     def post(self, request, *args, **kwargs):
+
         x1 = [value for key, value in sorted(request.POST.items()) if
               key.startswith("x1_")]
         x1 = pd.Series(x1, name='x1', dtype='float32')
@@ -33,10 +34,22 @@ class IndexView(TemplateView):
         delta_l_v = sko.get_delta_l_v()
         # mr,s,delta_s_l_v,delta_l_v
 
-        response = TemplateResponse(request, "result.html",
-                                    dict(mr=mr, s=s,
-                                         delta_s_l_v=delta_s_l_v,
-                                         delta_l_v=delta_l_v))
+        if request.POST['action'] == 'calc':
+            response = TemplateResponse(request, "result.html",
+                                        dict(mr=mr, s=s,
+                                             delta_s_l_v=delta_s_l_v,
+                                             delta_l_v=delta_l_v))
+        else:
+
+            d = pd.concat([sko.get_data(),
+                           sko.get_avg(),
+                           sko.get_disp()], axis=1)
+            response = TemplateResponse(request, "act.html",
+                                        dict(data=d,
+                                             s=sko.get_s(),
+                                             rep=sko.get_rep(),
+                                             delta_s_l_v=delta_s_l_v,
+                                             delta_l_v=delta_l_v))
 
         return response
 
@@ -98,8 +111,10 @@ class ShewhartView(TemplateView):
         else:
             m2 = 2
 
-        sm = ShewhartMap(data, n, k, sigma_R_l=sigma_R_l, sigma_r_l=sigma_r_l,
+        sm = ShewhartMap(data, n, k, sigma_R_l=sigma_R_l,
+                         sigma_r_l=sigma_r_l,
                          R1=R1, R2=R2, r=r, delta=delta)
-        response = HttpResponse("<center>" + sm.get_map(m1, m2) + "</center>")
+        response = HttpResponse(
+            "<center>" + sm.get_map(m1, m2) + "</center>")
 
         return response

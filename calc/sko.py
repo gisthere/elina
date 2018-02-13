@@ -32,16 +32,17 @@ class Sko:
         self.disp = self.data.var(axis=1)
 
         self.__filter_kohern()
-        # repeatability
+        # repeatability (CКО повторяемости)
         self.rep = math.sqrt(self.disp.sum() / self.disp.shape[0])
 
         self.__filter_grabbs()
-        R_l = 2.77 * self.s
+
+        R_l = 2.77 * self.s  # self.s CКО воспроизводимость
 
         self.__filter_student()
         self.delta_s_l_v = 2 * math.sqrt(
-            self.s ** 2 / self.avg.shape[0] + self.delta_0 ** 2 / 3)
-        self.delta_l_v = 2 * math.sqrt(self.s ** 2 + self.delta_0 ** 2)
+            self.s ** 2 / self.avg.shape[0] + self.delta_0 ** 2 / 3)  # правильность
+        self.delta_l_v = 2 * math.sqrt(self.s ** 2 + self.delta_0 ** 2)  # точность
 
     def __filter_kohern(self):
         k_table = pd.read_excel(Sko.table_dir + "/Kohern.xlsx", index_col=0)
@@ -72,10 +73,11 @@ class Sko:
             self.disp.drop(self.disp.idxmax(), inplace=True)
             x_mean = self.avg.mean()
             x_p = self.avg.max()
-            s = math.sqrt(
+
+            self.s = math.sqrt(
                 (1 / (self.avg.shape[0] - 1)) * (self.avg - x_mean).apply(
                     lambda x: x ** 2).sum())
-            g_p = (x_p - x_mean) / s
+            g_p = (x_p - x_mean) / self.s
 
     def __filter_student(self):
         s_table = pd.read_excel(Sko.table_dir + "/Student.xlsx", index_col=0,
@@ -102,6 +104,17 @@ class Sko:
     def get_s(self):
         return self.s
 
+    def get_data(self):
+        return self.data
+
+    def get_avg(self):
+        return self.avg
+
+    def get_disp(self):
+        return self.disp
+
+    def get_rep(self):
+        return self.rep
 
 class ShewhartMap:
     def __init__(self, data, n, k,
