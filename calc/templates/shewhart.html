@@ -8,7 +8,13 @@
     <link rel="stylesheet"
           href="{% static "calc/bootstrap/css/bootstrap.min.css" %}">
 
-    <style></style>
+    <style>
+
+        .btn-holder button {
+            width: 150px;
+        }
+
+    </style>
 
 </head>
 <body>
@@ -38,7 +44,8 @@
 
     </div>
 
-    <form class="form-horizontal" action="/shewhart" method="post">{% csrf_token %}
+    <form class="form-horizontal" action="/shewhart"
+          method="post">{% csrf_token %}
 
         <!-- Text input-->
         <div class="form-group">
@@ -91,7 +98,8 @@
                                                 Внутрилабораторная
                                                 прецизионность
                                             </label>
-                                            <input id="sigma_R_l" name="sigma_R_l"
+                                            <input id="sigma_R_l"
+                                                   name="sigma_R_l"
                                                    placeholder=""
                                                    class="form-control"
                                                    required=""
@@ -106,7 +114,8 @@
                                             <label for=sigma_r_l>
                                                 Повторяемость
                                             </label>
-                                            <input id="sigma_r_l" name="sigma_r_l"
+                                            <input id="sigma_r_l"
+                                                   name="sigma_r_l"
                                                    placeholder=""
                                                    class="form-control"
                                                    required=""
@@ -256,7 +265,10 @@
             </tbody>
         </table>
 
-        <div class="text-center">
+        <div class="text-center btn-holder">
+            <button class="btn btn-primary" name="action" value="act">
+                Акт
+            </button>
             <button class="btn btn-primary">
                 Построить
             </button>
@@ -273,11 +285,13 @@
 
     $(document).ready(function () {
         $('input[type=radio]').each(function () {
-           $(this).parent().siblings('fieldset').prop('disabled', !$(this).is(':checked'));
+            $(this).parent().siblings('fieldset').prop('disabled', !$(this).is(':checked'));
         });
 
         $('input[type=radio][name=rb1],[type=radio][name=rb2]').change(function () {
-            $(this).closest('.row').find('fieldset').prop('disabled', function (_, val) { return ! val; });
+            $(this).closest('.row').find('fieldset').prop('disabled', function (_, val) {
+                return !val;
+            });
         });
     });
 

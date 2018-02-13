@@ -114,7 +114,13 @@ class ShewhartView(TemplateView):
         sm = ShewhartMap(data, n, k, sigma_R_l=sigma_R_l,
                          sigma_r_l=sigma_r_l,
                          R1=R1, R2=R2, r=r, delta=delta)
-        response = HttpResponse(
-            "<center>" + sm.get_map(m1, m2) + "</center>")
+
+        if request.POST.get('action') == 'act':
+            d = pd.concat([data, data.mean(axis=1), data.var(axis=1)], axis=1)
+            response = TemplateResponse(request, "shewact.html",
+                                        dict(data=d))
+        else:
+            response = HttpResponse(
+                "<center>" + sm.get_map(m1, m2) + "</center>")
 
         return response
